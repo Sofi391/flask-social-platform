@@ -1,4 +1,4 @@
-# 📝 Flask Socials
+# 📝 Flask Social Platform
 
 [![Python](https://img.shields.io/badge/Python-3.x-blue)](https://www.python.org/)  
 [![Flask](https://img.shields.io/badge/Flask-2.3.2-green)](https://flask.palletsprojects.com/)  
@@ -6,74 +6,73 @@
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple)](https://getbootstrap.com/)  
 [![License](https://img.shields.io/badge/License-MIT-yellow)](#)
 
-A production-ready **full-stack blog platform** built with Flask that enables users to create, share, and engage with content through posts, comments, and social interactions.
+A **full-stack Flask application** designed as a social blogging platform where users can create, share, and engage with content. This project highlights foundational **backend development skills** including authentication, role-based permissions, relational database design, and notification systems.
 
-This platform provides a complete blogging experience with user authentication, rich text editing, social features, real-time notifications, and a powerful admin dashboard for content moderation and user management.
+> 📸 **Screenshots**: Check out the `/screenshots` folder to see every page and feature in action.
 
 ---
 
 ## ✨ Project Overview
 
-Flask Socials is designed to simulate a real-world social blogging platform where users can:
+Flask Social Platform simulates a **real-world social media/blogging environment**, allowing users to:
 
-- Create and publish rich-formatted blog posts
-- Engage with content through comments and likes
-- Receive real-time notifications for interactions
-- Manage their profile and content
-- Experience role-based access control
+- Publish posts and rich-formatted content
+- Engage with posts through comments and likes
+- Receive in-app and email notifications for interactions
+- Manage profiles and personal content
+- Experience role-based access (User, Admin, Super Admin)
 
-Admins have powerful tools to moderate content, manage users, and maintain platform quality. The project demonstrates production-grade practices including secure authentication, email integration, and environment-based configuration.
+The platform emphasizes **backend concepts** such as secure authentication, relational data management, query optimization, and filtering.
 
-> 📸 **Check out the `/screenshots` folder to see the web interface and application features in action!**
+Admins can moderate content, manage users, and ensure platform quality. The project demonstrates **production-ready practices**, though it is primarily educational to showcase backend growth and framework versatility.
 
 ---
 
 ## 🛠 Core Features
 
 ### 🔐 Authentication & User Management
-- **Authentication System**: Secure user registration and login with password hashing
-- **Password Recovery**: Email-based password reset with time-limited verification codes
-- **User Profiles**: Personalized profiles with Gravatar integration
-- **Role-Based Access Control**: Multi-tier permission system (User, Admin, Super Admin)
-
----
+- Secure registration and login with password hashing (PBKDF2-SHA256)
+- Email-based password reset with verification
+- Profile management with Gravatar integration
+- Role-based permissions (User, Admin, Super Admin)
 
 ### 📝 Content Management
-- **Rich Text Editor**: CKEditor integration for creating formatted blog posts
-- **Post Operations**: Create, edit, delete, and view blog posts
-- **Image Support**: Add custom images to posts via URL
-- **Search Functionality**: Search posts by title and author name
-- **Dynamic Feed**: Randomized post display with infinite scroll loading
+- Rich-text blog posts with CKEditor
+- Create, edit, delete posts
+- Image support via URLs
+- Post search by title or author
+- Dynamic feed with custom refresh
 
----
-
-### 💬 Social Features
-- **Comments System**: Nested commenting with edit and delete capabilities
-- **Like System**: Like posts and comments with real-time updates
-- **Notifications**: In-app notification system for user interactions
-- **Email Notifications**: Automated email alerts for important account activities
-
----
+### 💬 Social Interactions
+- Nested comments with edit/delete
+- Like system for posts and comments
+- In-app notifications for interactions
+- Email notifications for important account activities
 
 ### 🛡 Admin Dashboard
-- **User Management**: Promote, demote, restrict, or remove users
-- **Content Moderation**: Admin and post author can delete comments
-- **Access Control**: Restrict users from posting and commenting
-- **Role Hierarchy**: Super Admin has elevated privileges over regular admins
+- User management: promote, demote, restrict, or remove
+- Content moderation: delete posts/comments
+- Role hierarchy: Super Admin overrides Admin privileges
+
+### ⚙️ Backend Concepts
+- Relational database management with SQLAlchemy (SQLite)
+- Filtering and query optimization
+- Environment-based configuration using `.env`
+- Security: CSRF protection, session management, input validation
 
 ---
 
 ## ⚙️ Tech Stack
 
-- **Backend**: Flask 2.3.2
-- **Database**: SQLAlchemy 2.0.25 with SQLite
-- **Authentication**: Flask-Login 0.6.3
-- **Forms**: Flask-WTF 1.2.1 with WTForms 3.0.1
-- **UI Framework**: Bootstrap 5 (Bootstrap-Flask 2.2.0)
-- **Rich Text**: Flask-CKEditor 0.4.6
-- **Email**: SMTP with Gmail integration
-- **Security**: Werkzeug 3.0.0 for password hashing
-- **Environment**: python-dotenv 1.0.0
+- **Backend:** Flask 2.3.2  
+- **Database:** SQLite with SQLAlchemy 2.0.25  
+- **Authentication:** Flask-Login 0.6.3  
+- **Forms:** Flask-WTF 1.2.1 + WTForms 3.0.1  
+- **UI Framework:** Bootstrap 5 (Bootstrap-Flask 2.2.0)  
+- **Rich Text:** Flask-CKEditor 0.4.6  
+- **Email:** SMTP with Gmail integration  
+- **Security:** PBKDF2-SHA256 hashing, CSRF protection  
+- **Environment:** python-dotenv 1.0.0  
 
 ---
 
@@ -153,128 +152,42 @@ flask_socials/
 └── .gitignore      # Git ignore rules
 ```
 
----
-
-## 💾 Database Models
-
-- **User**: User accounts with authentication and role management
-- **BlogPost**: Blog posts with title, content, images, and metadata
-- **Comments**: User comments on posts with edit tracking
-- **Likes**: Like relationships for posts and comments
-- **Notifications**: In-app notification system
+Modular structure improves maintainability, scalability, and clarity.
 
 ---
 
-## 🔒 Security Features
+## 🌐 Application Overview
 
-- Password hashing with PBKDF2-SHA256
-- CSRF protection on all forms
-- Session management with secure cookies
-- Environment-based configuration
-- SQL injection prevention via SQLAlchemy ORM
-- Role-based access control decorators
+The app provides a REST-like interface:
 
----
-
-## 🌐 Application Routes
-
-### Public Routes
-- `GET /` - Home page with blog feed
-- `GET /about` - About page
-- `GET /contact` - Contact form
-- `GET /post/<id>` - View individual post
-- `GET /search` - Search posts
-
-### Authentication
-- `GET/POST /register` - User registration
-- `GET/POST /login` - User login
-- `GET /logout` - User logout
-- `GET/POST /forget_password` - Password reset request
-- `GET/POST /verification` - Verify reset code
-- `GET/POST /password_reset` - Reset password
-
-### User Routes (Login Required)
-- `GET /my_posts/<user_id>` - User's posts
-- `GET/POST /new_post` - Create new post
-- `GET/POST /edit/<id>` - Edit post
-- `GET /delete/<id>` - Delete post
-- `POST /post_like/<post_id>` - Like/unlike post
-- `POST /like_comment/<comment_id>` - Like/unlike comment
-- `GET /notifications` - View notifications
-
-### Admin Routes
-- `GET /admin_dashboard` - Admin control panel
-- `GET /promote/<user_id>` - Promote user to admin
-- `GET /demote/<user_id>` - Demote admin to user
-- `GET /restrict_user/<user_id>` - Restrict user access
-- `GET /unrestrict_user/<user_id>` - Remove restrictions
-- `GET /remove_user/<user_id>` - Delete user account
+- **Public pages**: home feed, about, contact, post views, search  
+- **Authenticated routes**: create/edit/delete posts, like/unlike, comments, notifications  
+- **Admin routes**: user promotion/demotion, restriction, deletion, content moderation
 
 ---
 
-## 🛡 Production-Ready Practices
+## 🛡 Production Practices
 
-- Environment-based configuration using `.env`
-- Secure password hashing with PBKDF2-SHA256
-- CSRF protection on all forms
-- SQL injection prevention via SQLAlchemy ORM
-- Role-based access control system
-- Email notification system for user activities
-- Session management with secure cookies
-- Gravatar integration for user avatars
-- Input validation and sanitization
+- Environment-based configuration  
+- Secure authentication and password hashing  
+- Role-based access control  
+- CSRF protection and session management  
+- Input validation and sanitization  
+- Relational database with SQLAlchemy ORM
+- Query filtering and optimization  
+- Email notifications for key events  
 
 ---
 
 ## 🎯 Learning Outcomes
 
-- Building full-stack web applications with Flask
-- Implementing secure authentication and authorization systems
-- Designing relational database schemas with SQLAlchemy
-- Creating role-based permission systems
-- Integrating rich text editors (CKEditor)
-- Building real-time notification systems
-- Implementing email functionality with SMTP
-- Managing user sessions and cookies
-- Writing production-ready Flask applications
-- Following security best practices
-
----
-
-## 👨‍💻 About the Developer
-
-Hi! I'm **Sofi (Sofoniyas)** — a **Full-Stack Developer** and **Software Engineering student at AASTU**, and a **graduate of the ALX Backend Engineering Program**.
-
-I specialize in building **secure, scalable, and production-ready web applications** using modern technologies. I enjoy translating real-world requirements into clean, maintainable, and efficient solutions.
-
-I'm particularly interested in:
-
-- Full-stack web development with Flask and Django
-- Authentication, authorization, and security best practices
-- Building scalable backend systems and RESTful APIs
-- Database design and optimization
-- Creating intuitive user experiences
-- Writing clean, maintainable code
-
-This project showcases my ability to build complete web applications with complex features like social interactions, notifications, and admin dashboards while following production-grade practices.
-
----
-
-### 🤝 Connect with Me
-
-[<img align="left" alt="LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]  
-[<img align="left" alt="GitHub" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/github.svg" />][github]  
-
-[linkedin]: https://linkedin.com/in/sofoniyas-alebachew-bb876b33b
-[github]: https://github.com/sofi391
-
-<br />
-
----
-
-## 📄 License
-
-This project is open source and available under the MIT License.
+- Full-stack application design using Flask  
+- Secure authentication & role-based permissions  
+- Relational database modeling  
+- Real-time notification systems  
+- Rich text editing integration  
+- Managing backend workflows and security  
+- Growth story: first major backend project showcasing foundational skills  
 
 ---
 
@@ -288,10 +201,27 @@ This project is open source and available under the MIT License.
 
 ---
 
-## 💬 Support
+## 👨‍💻 About the Developer
 
-For issues, questions, or contributions, please use the contact form or open an issue on the repository.
+Hi! I’m **Sofi (Sofoniyas)** — a **Backend Developer** and **Software Engineering student at AASTU**, graduate of the **ALX Backend Engineering Program**.  
+
+I build **secure, scalable, and production-ready backend applications**. 
+This project shows my **first hands-on experience with Flask**, demonstrating my growth to more complex Django and API projects.
 
 ---
 
-**⭐ If you find this project helpful, please consider giving it a star!**
+### 🤝 Connect with Me
+
+[<img align="left" alt="LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]  
+[<img align="left" alt="GitHub" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/github.svg" />][github]  
+
+[linkedin]: https://linkedin.com/in/sofoniyas-alebachew-bb876b33b  
+[github]: https://github.com/Sofi391
+
+<br />
+
+---
+
+## 📄 License
+
+This project is open source and available under the MIT License.
