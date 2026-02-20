@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Title and favicon are included in header.html -->
+    {% include "header.html" %}
+    <!-- Custom Feed CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/feed.css') }}">
+</head>
+<body>
+    {% include "header.html" %}
+
+    <!-- Main Content-->
+    <div class="feed-background">
+        <div class="feed-container">
+
+            <!-- Flash Messages -->
+            {% with messages=get_flashed_messages() %}
+                {% for message in messages %}
+                    {% if message %}
+                        <div class="feed-flash-message">{{message}}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+
+            <!-- Shuffle Button -->
+            <a href="/?refresh=1" id="feedShuffleBtn" title="Refresh Posts">
+                <i class="bi bi-arrow-clockwise"></i>
+            </a>
+
+            <!-- Posts Container for Infinite Scroll -->
+            <div class="feed-posts-container" id="feed-posts-container">
+                {% for posts in blogs %}
+                <div class="feed-post-card">
+                    <!-- Post preview-->
+                    {% set post_id=posts.id %}
+                    <div class="feed-post-preview">
+                        <!-- Post Header with Category Badge -->
+                        <div class="feed-post-header">
+                            <span class="feed-post-category">Blog Post</span>
+                            <span class="feed-post-read-time">📖 5 min read</span>
+                        </div>
+
+                        <!-- Author Info - MOVED TO TOP -->
+                        <div class="feed-post-meta">
+                            <div class="feed-author-info">
+                                <img src="{{ posts.author.email | gravatar(size=45) }}" alt="Profile" class="feed-author-avatar">
+                                <div class="feed-author-details">
+                                    <a href="{{url_for('my_posts',user_id=posts.author.id)}}" target="_blank" class="feed-author-name">{{ posts.author.name }}</a>
+                                    <span class="feed-post-date">{{ posts.date }}</span>
+                                </div>
+                            </div>
+                            {% if current_user.is_admin %}
+                            <a class="feed-delete-post-link" data-url="{{ url_for('delete_post', id=posts.id, from='home') }}">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+
+                        <a href="{{ url_for('post_page', id=post_id) }}" class="feed-post-content">
+                            <h2 class="feed-post-title">{{ posts.title }}</h2>
+                            <h3 class="feed-post-subtitle">{{ posts.subtitle }}</h3>
+                            <div class="feed-post-excerpt">
+                                {{ posts.body|striptags|truncate(150) }}
+                            </div>
+                        </a>
+
+                        <!-- Post Actions -->
+                        <div class="feed-post-actions">
+                            <div class="feed-post-stats">
+                                <div class="feed-like-section">
+                                    <form action="{{ url_for('post_like', post_id=posts.id) }}" method="POST"
+                                          class="feed-like-form" data-post-id="{{ posts.id }}">
+
+                                        <!-- Like Button -->
+                                        <button type="submit" class="feed-like-btn {% if posts in current_user.likes|map(attribute='post') %}feed-liked{% endif %}">
+                                            <i class="bi {% if posts in current_user.likes|map(attribute='post') %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                                            <span class="feed-like-count">{{ posts.likes|length }}</span>
+                                        </button>
+                                    </form>
+
+                                    <!-- Comment Count -->
+                                    <div class="feed-comment-count">
+                                        <i class="bi bi-chat"></i>
+                                        <span>{{ posts.comments|length }}</span>
+                                    </div>
+
+                                    <!-- View Count -->
+                                    <div class="feed-view-count">
+                                        <i class="bi bi-eye"></i>
+                                        <span>{{ posts.views or 0 }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Liked by text with popup -->
+                                {% if posts.likes|length > 0 %}
+                                <div class="feed-liked-by-container">
+                                    <span class="feed-liked-by-toggle">Liked by {{ posts.likes|length }} people</span>
+
+                                    <!-- Liked By Popup -->
+                                    <div class="feed-liked-by-popup">
+                                        <div class="feed-popup-content">
+                                            <p class="feed-popup-title">Liked by:</p>
+                                            <div class="feed-liked-by-list-container">
+                                                <ul class="feed-liked-by-list">
+                                                    {% for like in posts.likes %}
+                                                    <li class="feed-liked-user">
+                                                        <img src="{{ like.author.email | gravatar(size=32) }}" alt="Profile" class="feed-user-avatar">
+                                                        <a href="{{ url_for('my_posts', user_id=like.author.id) }}" target="_blank" class="feed-liker-name">
+                                                            @{{ like.author.name }}
+                                                        </a>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <a href="{{ url_for('post_page', id=post_id) }}" class="feed-read-more-btn">
+                                Read More <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="feed-loading-container" id="feed-loading-spinner">
+                <div class="feed-loading-spinner" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Loading more posts...</p>
+            </div>
+        </div>
+    </div>
+
+    {% include "footer.html" %}
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Inline JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const postsContainer = document.getElementById("feed-posts-container");
+            const spinner = document.getElementById("feed-loading-spinner");
+            if (!postsContainer) return;
+
+            // === Infinite Scroll Setup ===
+            let currentOffset = 5;
+            const limit = 5;
+            let loading = false;
+            let allLoaded = false;
+
+            function loadMorePosts() {
+                if (loading || allLoaded) return;
+                loading = true;
+                spinner.style.display = "flex";
+
+                fetch(`/load_posts?offset=${currentOffset}&limit=${limit}`)
+                    .then(res => res.text())
+                    .then(html => {
+                        spinner.style.display = "none";
+
+                        if (!html.trim()) {
+                            allLoaded = true;
+                            return;
+                        }
+
+                        // Append new posts with animation
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = html;
+                        const newPosts = tempDiv.querySelectorAll('.feed-post-card');
+
+                        newPosts.forEach(post => {
+                            post.style.opacity = '0';
+                            post.style.transform = 'translateY(20px)';
+                            postsContainer.appendChild(post);
+
+                            // Animate in
+                            setTimeout(() => {
+                                post.style.opacity = '1';
+                                post.style.transform = 'translateY(0)';
+                            }, 100);
+                        });
+
+                        currentOffset += limit;
+                        loading = false;
+
+                        // Re-initialize event listeners for new posts
+                        initializePostInteractions();
+                    })
+                    .catch(() => {
+                        spinner.style.display = "none";
+                        loading = false;
+                    });
+            }
+
+            // === Scroll Event ===
+            window.addEventListener("scroll", () => {
+                if (allLoaded || loading) return;
+                if (window.scrollY + window.innerHeight >= document.body.offsetHeight - 300) {
+                    loadMorePosts();
+                }
+            });
+
+            // === Post Interactions ===
+            function initializePostInteractions() {
+                // Like functionality
+                document.querySelectorAll('.feed-like-form').forEach(form => {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const postId = this.dataset.postId;
+                        const likeBtn = this.querySelector('.feed-like-btn');
+                        const likeCount = this.querySelector('.feed-like-count');
+                        const likeIcon = likeBtn.querySelector('i');
+
+                        fetch(this.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams(new FormData(this))
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.likes_count !== undefined) {
+                                likeCount.textContent = data.likes_count;
+                                if (data.liked) {
+                                    likeBtn.classList.add('feed-liked');
+                                    likeIcon.classList.remove('bi-heart');
+                                    likeIcon.classList.add('bi-heart-fill');
+                                } else {
+                                    likeBtn.classList.remove('feed-liked');
+                                    likeIcon.classList.remove('bi-heart-fill');
+                                    likeIcon.classList.add('bi-heart');
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Like error:', error);
+                            this.submit();
+                        });
+                    });
+                });
+
+                // Liked by popup functionality
+                document.querySelectorAll('.feed-liked-by-toggle').forEach(toggle => {
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const popup = this.closest('.feed-liked-by-container').querySelector('.feed-liked-by-popup');
+                        const isVisible = popup.classList.contains('active');
+
+                        // Close all other popups
+                        document.querySelectorAll('.feed-liked-by-popup.active').forEach(p => {
+                            if (p !== popup) p.classList.remove('active');
+                        });
+
+                        // Toggle current popup
+                        popup.classList.toggle('active', !isVisible);
+                    });
+                });
+
+                // Close popups when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.feed-liked-by-popup') && !e.target.closest('.feed-liked-by-toggle')) {
+                        document.querySelectorAll('.feed-liked-by-popup.active').forEach(popup => {
+                            popup.classList.remove('active');
+                        });
+                    }
+                });
+
+                // Delete post confirmation
+                document.querySelectorAll('.feed-delete-post-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+                            window.location.href = this.dataset.url;
+                        }
+                    });
+                });
+            }
+
+            // Initialize interactions for initial posts
+            initializePostInteractions();
+
+            // Shuffle button animation
+            const shuffleBtn = document.getElementById('feedShuffleBtn');
+            if (shuffleBtn) {
+                shuffleBtn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px) rotate(180deg)';
+                });
+
+                shuffleBtn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) rotate(0)';
+                });
+
+                shuffleBtn.addEventListener('click', function(e) {
+                    this.style.transform = 'translateY(0) rotate(360deg)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(0) rotate(0)';
+                    }, 600);
+                });
+            }
+
+            // Add animation to post cards on load
+            const postCards = document.querySelectorAll('.feed-post-card');
+            postCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Fix mobile overlap with navbar
+            function adjustMobileSpacing() {
+                if (window.innerWidth <= 768) {
+                    const firstPost = document.querySelector('.feed-post-card');
+                    if (firstPost) {
+                        firstPost.style.marginTop = '1rem';
+                    }
+                }
+            }
+
+            adjustMobileSpacing();
+            window.addEventListener('resize', adjustMobileSpacing);
+        });
+    </script>
+</body>
+</html>

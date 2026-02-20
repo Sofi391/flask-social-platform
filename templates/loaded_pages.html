@@ -1,0 +1,58 @@
+<!-- Posts Container for Infinite Scroll -->
+    <div class="row gx-4 gx-lg-5 justify-content-center" id="posts-container">
+        {% for posts in blogs %}
+        <div class="col-md-10 col-lg-8 col-xl-7 post-card">
+            <!-- Post preview-->
+            {% set post_id=posts.id %}
+            <div class="post-preview">
+                <a href="{{ url_for('post_page', id=post_id) }}">
+                    <h2 class="post-title">{{ posts.title }}</h2>
+                    <h3 class="post-subtitle">{{ posts.subtitle }}</h3>
+                </a>
+                <p class="post-meta">
+                    Posted by
+                    <a href="{{url_for('my_posts',user_id=posts.author.id)}}" target="_blank">{{ posts.author.name }}</a>
+                    on {{ posts.date }}
+                    {% if current_user.is_admin %}
+                    <a class="delete-post-link" data-url="{{ url_for('delete_post', id=posts.id, from='home') }}">✘</a>
+                    {% endif %}
+                </p>
+                <form action="{{ url_for('post_like', post_id=posts.id) }}" method="POST"
+                      class="like-form mt-2 position-relative d-inline-block overflow-visible"
+                      data-post-id="{{ posts.id }}">
+
+                    <!-- Like Button -->
+                    <button type="submit" class="btn btn-link p-0 like-btn"
+                            style="color: {% if posts in current_user.likes|map(attribute='post') %}red{% else %}#adb5bd{% endif %}; font-size: 1.2rem;">
+                        <i class="bi bi-heart-fill"></i> <span class="like-count">{{ posts.likes|length }}</span>
+                    </button>
+
+                    <!-- Liked by text -->
+                    <p class="text-muted small mb-0 d-inline ms-2">
+                        · <a href="#" class="liked-by-toggle text-decoration-none">Liked by</a>
+                    </p>
+
+                    <!-- Popup -->
+                    <div class="liked-by-list card shadow-lg p-3 bg-dark text-light position-absolute"
+                         style="display: none; z-index: 9999; min-width: 250px; max-height: 300px; overflow-y: auto; border-radius: 10px;">
+                        <p class="fw-bold text-secondary mb-2">Liked by:</p>
+                        <ul class="list-unstyled mb-0">
+                            {% for like in posts.likes %}
+                            <li class="d-flex align-items-center mb-2">
+                                <img src="{{ like.author.email | gravatar }}"
+                                     alt="Profile" class="rounded-circle me-2" width="32" height="32">
+                                <a href="{{ url_for('my_posts', user_id=like.author.id) }}" class="text-light text-decoration-none" target="_blank">
+                                    @{{ like.author.name }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </form>
+            </div>
+            <!-- Divider-->
+            <hr class="my-4" />
+        </div>
+        {% endfor %}
+    </div>
+

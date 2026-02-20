@@ -1,0 +1,70 @@
+{% from "bootstrap5/form.html" import render_form %}
+{% block content %}
+{% include "header.html" %}
+
+<!-- Page Header -->
+<header class="masthead m-0" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../static/assets/img/register-bg.jpg'); background-size: cover; background-position: center;">
+  <div class="container position-relative px-4 px-lg-5 mt-0">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7 text-center text-white">
+        <div class="page-heading">
+          <h1 class="display-4 animate__animated animate__fadeInDown">Register</h1>
+          <span class="subheading fs-5 animate__animated animate__fadeInUp animate__delay-1s">Start Contributing to the Blog!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="mb-5" style="background-color: #f0f2f5;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+
+        <!-- Registration Card -->
+        <div class="card shadow-lg rounded-4 p-5 mt-5 animate__animated animate__fadeInUp" style="background: white;">
+          <h3 class="card-title text-center mb-4 fw-bold">Create Your Account</h3>
+
+          <!-- Render the form -->
+          {{ render_form(form, novalidate=True) }}
+
+          <!-- Optional Login Link -->
+          <p class="text-center mt-3">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+{% include "footer.html" %}
+
+<!-- Custom CSS for Registration Page -->
+<style>
+  /* Gradient Button */
+  .btn-gradient {
+    background: linear-gradient(90deg, #4ade80, #16a34a);
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+
+  /* Form inputs focus effect */
+  .form-control:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 0.2rem rgba(22,163,74,0.25);
+  }
+
+  /* Terms link hover */
+  .form-check-label a:hover {
+    color: #16a34a;
+  }
+</style>
+
+{% endblock %}

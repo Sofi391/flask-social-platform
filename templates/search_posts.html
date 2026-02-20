@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+
+{% if found == 0 %}
+<section class="search-empty">
+    <div class="empty-container">
+        <h1>No Results Found</h1>
+        <p>Sorry, we couldn’t find any posts matching your search.</p>
+        <form class="search-box" method="GET">
+            <input type="search" name="q" placeholder="Try searching again..." required>
+            <button type="submit">Search</button>
+        </form>
+        <a href="{{ url_for('home') }}" class="back-home">← Return Home</a>
+    </div>
+</section>
+
+{% else %}
+<section class="search-section">
+    <!-- Back to home -->
+    <div class="back-btn-container">
+        <a href="{{ url_for('home') }}" class="back-btn">← Back to Home</a>
+    </div>
+
+    <!-- Found results header -->
+    <div class="results-header">
+        <h2><span>{{ found }}</span> result(s) found</h2>
+    </div>
+
+    <div class="results-container">
+        {% for posts in search_results %}
+        <div class="result-card fade-in">
+            <div class="card-content">
+                <a href="{{ url_for('post_page', id=posts.id) }}" class="post-link">
+                    <h3 class="title">{{ posts.title }}</h3>
+                    <p class="subtitle">{{ posts.subtitle }}</p>
+                </a>
+
+                <div class="post-meta">
+                    <span>by <a href="{{url_for('my_posts',user_id=posts.author.id)}}">{{ posts.author.name }}</a></span>
+                    <span class="dot">•</span>
+                    <span>{{ posts.date }}</span>
+                </div>
+
+                <div class="card-actions">
+                    <form action="{{ url_for('post_like', post_id=posts.id) }}" method="POST" class="like-form" data-post-id="{{ posts.id }}">
+                        <button type="submit" class="like-btn {% if posts in current_user.likes|map(attribute='post') %}liked{% endif %}">
+                            <i class="bi bi-heart-fill"></i>
+                            <span class="like-count">{{ posts.likes|length }}</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

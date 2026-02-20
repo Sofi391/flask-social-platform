@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include "header.html" %}
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/verify.css') }}">
+</head>
+
+<body>
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('../static/assets/img/verify-bg.jpg');">
+        <div class="container position-relative px-4 px-lg-5 text-center text-white">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <h1 class="display-5 fw-bold mb-3">Verify Your Email</h1>
+                    <p class="lead mb-0">Enter the code sent to your email to reset your password.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container mt-3">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <!-- Verification Code Section -->
+    <section class="verify-section py-5">
+        <div class="container px-4 px-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="verify-card shadow-lg rounded-4 p-4">
+                        <form method="POST" action="{{ url_for('verify') }}" novalidate>
+                          <div class="mb-4 text-center">
+                              <h2 class="fw-bold mb-2">Enter Verification Code</h2>
+                              <p class="text-muted small">The code is valid for <span id="countdown">03:00</span> minutes.</p>
+                          </div>
+
+                          <div class="mb-4 code-inputs text-center">
+                              <input type="text" name="digit1" maxlength="1" class="code-digit">
+                              <input type="text" name="digit2" maxlength="1" class="code-digit">
+                              <input type="text" name="digit3" maxlength="1" class="code-digit">
+                              <input type="text" name="digit4" maxlength="1" class="code-digit">
+                              <input type="text" name="digit5" maxlength="1" class="code-digit">
+                          </div>
+
+                          <div class="d-grid mb-3">
+                              <button type="submit" class="btn btn-verify w-100 py-2">
+                                  Verify Code
+                              </button>
+                          </div>
+
+                          <div class="text-center">
+                              <a href="{{ url_for('forget_password') }}" class="back-link">
+                                  <i class="bi bi-arrow-left"></i> Back
+                              </a>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include "footer.html" %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Countdown & auto-focus code -->
+<!-- Countdown & auto-focus code -->
+<script>
+    let timeLeft = 180; // 3 minutes in seconds
+    const countdownEl = document.getElementById("countdown");
+
+    const timer = setInterval(() => {
+        const minutes = String(Math.floor(timeLeft / 60)).padStart(2,'0');
+        const seconds = String(timeLeft % 60).padStart(2,'0');
+        countdownEl.textContent = `${minutes}:${seconds}`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            countdownEl.textContent = "00:00 - Code Expired";
+        }
+        timeLeft--;
+    }, 1000);
+
+    // Auto-focus next input and auto-submit on last digit
+    const inputs = document.querySelectorAll(".code-digit");
+    const form = document.querySelector("form");
+
+    inputs.forEach((input, idx) => {
+        input.addEventListener("input", () => {
+            // Move to next input if current filled
+            if (input.value.length === 1 && idx < inputs.length - 1) {
+                inputs[idx + 1].focus();
+            }
+
+            // Auto-submit if last input filled
+            if (idx === inputs.length - 1 && input.value.length === 1) {
+                form.submit();
+            }
+        });
+
+        // Optional: allow backspace to go back
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && input.value === "" && idx > 0) {
+                inputs[idx - 1].focus();
+            }
+        });
+    });
+</script>
+</body>
+</html>

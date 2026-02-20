@@ -1,0 +1,77 @@
+{% include "header.html" %}
+
+<section class="container-fluid mb-0 py-5 px-3 px-lg-5" style="background-color: #121212; min-height: 80vh;">
+  <h2 class="text-center text-light mb-4 pt-4">Admin Dashboard</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                 <p class="text-danger">{{message}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle text-center border border-secondary rounded-3">
+      <thead class="table-secondary text-dark">
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Status</th>
+          <th scope="col">Posts</th>
+          <th scope="col">Restrictions</th>
+          <th scope="col">Promote / Demote</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            {% if user.is_admin %}
+              <span class="badge bg-info">Admin</span>
+            {% else %}
+              <span class="badge bg-light text-dark">User</span>
+            {% endif %}
+          </td>
+          <td><a href="{{url_for('my_posts',user_id=user.id)}}" class="text-light">{{ user.posts|length }}</a></td>
+          <td>
+            {% if not user.is_restricted %}
+              <button class="btn btn-sm btn-outline-warning"
+                      {% if user.id == 1 %}disabled{% endif %} data-action="restrict"
+              data-url='{{ url_for('restrict_user', user_id=user.id) }}'">Restrict</button>
+            {% else %}
+              <button class="btn btn-sm btn-outline-secondary"
+                      {% if user.id == 1 %}disabled{% endif %} data-action="unrestrict"
+              data-url='{{ url_for('unrestrict_user', user_id=user.id) }}'">Unrestrict</button>
+            {% endif %}
+          </td>
+          <td>
+            {% if not user.is_admin %}
+              <button class="btn btn-sm btn-outline-success"
+                      {% if user.id == 1 %}disabled{% endif %} data-action="promote"
+              data-url='{{ url_for('promote', user_id=user.id) }}'">Promote</button>
+            {% else %}
+              <button class="btn btn-sm btn-outline-secondary"
+                      {% if user.id == 1 %}disabled{% endif %} data-action="demote"
+              data-url='{{ url_for('demote', user_id=user.id) }}'">Demote</button>
+            {% endif %}
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-danger"
+                    {% if user.id == 1 %}disabled{% endif %} data-action="delete"
+            data-url='{{ url_for('remove_user', user_id=user.id) }}'">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+
+{% include "footer.html" %}

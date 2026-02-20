@@ -1,0 +1,65 @@
+/* Card styling */
+.verify-card {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.verify-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+/* Code input fields */
+.code-digit {
+    width: 50px;
+    height: 60px;
+    margin: 0 5px;
+    font-size: 1.75rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 0.75rem;
+    border: 2px solid #ced4da;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.code-digit:focus {
+    border-color: #f5c518;
+    box-shadow: 0 0 10px rgba(245, 197, 24, 0.5);
+    outline: none;
+}
+
+/* Countdown timer */
+#countdown {
+    font-weight: 600;
+    color: #f5c518;
+    font-size: 1.1rem;
+}
+
+/* Verify button */
+.btn-verify {
+    background: linear-gradient(90deg, #4a90e2, #50e3c2);
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-verify:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(74, 144, 226, 0.3);
+}
+
+/* Back link */
+.back-link {
+    text-decoration: none;
+    font-weight: 500;
+    color: #4a90e2;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: #50e3c2;
+}

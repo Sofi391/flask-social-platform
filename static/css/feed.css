@@ -1,0 +1,740 @@
+:root {
+    --feed-primary: #3b82f6;
+    --feed-primary-hover: #2563eb;
+    --feed-secondary: #64748b;
+    --feed-accent: #8b5cf6;
+    --feed-light: #f8fafc;
+    --feed-dark: #1e293b;
+    --feed-success: #10b981;
+    --feed-danger: #ef4444;
+    --feed-warning: #f59e0b;
+    --feed-info: #06b6d4;
+    --feed-gray: #64748b;
+    --feed-light-gray: #e2e8f0;
+    --feed-lighter-gray: #f1f5f9;
+    --feed-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --feed-hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --feed-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc !important;
+    color: var(--feed-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* === NAVBAR STYLING === */
+/* Force navbar background to be dark for visibility */
+#mainNav.navbar-light {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 0.8rem 0 !important;
+}
+
+/* Ensure navbar links are visible on dark background */
+#mainNav .navbar-brand,
+#mainNav .nav-link,
+#mainNav .navbar-toggler {
+    color: white !important;
+}
+
+#mainNav .nav-link:hover {
+    color: #60a5fa !important;
+}
+
+/* Make sure the profile sidebar button is visible */
+.profile-sidebar-trigger {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+    box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Search form styling for dark background */
+#mainNav .form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+#mainNav .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+#mainNav .btn-outline-warning {
+    border-color: #f59e0b !important;
+    color: #f59e0b !important;
+}
+
+#mainNav .btn-outline-warning:hover {
+    background-color: #f59e0b !important;
+    color: #1e293b !important;
+}
+
+/* Notification bell icon */
+#mainNav .fa-bell {
+    color: white !important;
+}
+
+/* Mobile search button */
+#mainNav .mobile-search-btn {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+}
+
+#mainNav .mobile-search-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* === FEED STYLING === */
+/* Fix navigation overlap and background */
+.feed-background {
+    min-height: calc(100vh - 120px);
+    padding: 2rem 0 4rem;
+    margin-top: 80px;
+    background: #f8fafc !important;
+}
+
+.feed-container {
+    max-width: 550px !important;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Flash Messages */
+.feed-flash-message {
+    background: var(--feed-success);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+    display: inline-block;
+    box-shadow: var(--feed-card-shadow);
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Shuffle Button */
+#feedShuffleBtn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--feed-primary), var(--feed-accent));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: var(--feed-hover-shadow);
+    z-index: 100;
+    transition: var(--feed-transition);
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+#feedShuffleBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Posts Container */
+.feed-posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Post Cards */
+.feed-post-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: feedFadeInUp 0.6s ease forwards;
+}
+
+@keyframes feedFadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feed-post-preview {
+    background: white;
+    border-radius: 20px;
+    padding: 1.75rem;
+    box-shadow: var(--feed-card-shadow);
+    transition: var(--feed-transition);
+    border: 1px solid var(--feed-light-gray);
+    position: relative;
+    overflow: hidden;
+}
+
+.feed-post-preview:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--feed-hover-shadow);
+}
+
+/* Post Header */
+.feed-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--feed-lighter-gray);
+}
+
+.feed-post-category {
+    background: linear-gradient(135deg, var(--feed-primary), var(--feed-accent));
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.feed-post-read-time {
+    font-size: 0.75rem;
+    color: var(--feed-gray);
+    font-weight: 500;
+}
+
+/* Post Meta - FIXED AUTHOR AVATAR */
+.feed-post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--feed-lighter-gray);
+    border-radius: 12px;
+}
+
+.feed-author-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* FIXED: Author avatar styling */
+.feed-author-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: var(--feed-transition);
+    object-fit: cover; /* This ensures the image fills the circle properly */
+    display: block; /* Removes extra space below image */
+}
+
+.feed-author-avatar:hover {
+    transform: scale(1.1);
+    border-color: var(--feed-primary);
+}
+
+.feed-author-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.feed-author-name {
+    font-weight: 600;
+    color: var(--feed-dark);
+    text-decoration: none;
+    transition: var(--feed-transition);
+    font-size: 0.9rem;
+}
+
+.feed-author-name:hover {
+    color: var(--feed-primary);
+}
+
+.feed-post-date {
+    font-size: 0.75rem;
+    color: var(--feed-gray);
+}
+
+.feed-delete-post-link {
+    color: var(--feed-danger);
+    text-decoration: none;
+    transition: var(--feed-transition);
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.feed-delete-post-link:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--feed-danger);
+    transform: scale(1.1);
+}
+
+/* Post Content */
+.feed-post-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--feed-dark);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.feed-post-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--feed-primary);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.feed-post-excerpt {
+    font-size: 0.9rem;
+    color: var(--feed-gray);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.feed-post-content {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--feed-transition);
+    display: block;
+}
+
+.feed-post-content:hover .feed-post-title {
+    color: var(--feed-primary);
+}
+
+.feed-post-content:hover .feed-post-subtitle {
+    color: var(--feed-primary-hover);
+}
+
+/* Post Actions */
+.feed-post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.feed-post-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.feed-like-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.feed-like-form {
+    display: flex;
+    align-items: center;
+}
+
+.feed-like-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--feed-lighter-gray);
+    border: none;
+    cursor: pointer;
+    transition: var(--feed-transition);
+    padding: 0.6rem 1rem;
+    border-radius: 50px;
+    font-weight: 500;
+    color: var(--feed-gray);
+    font-size: 0.85rem;
+}
+
+.feed-like-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--feed-danger);
+    transform: scale(1.05);
+}
+
+.feed-like-btn.feed-liked {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--feed-danger);
+}
+
+.feed-comment-count,
+.feed-view-count {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--feed-gray);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Liked By Section */
+.feed-liked-by-container {
+    position: relative;
+}
+
+.feed-liked-by-toggle {
+    color: var(--feed-primary);
+    font-size: 0.8rem;
+    transition: var(--feed-transition);
+    cursor: pointer;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(59, 130, 246, 0.1);
+    font-weight: 500;
+}
+
+.feed-liked-by-toggle:hover {
+    color: white;
+    background: var(--feed-primary);
+}
+
+/* Liked By Popup */
+.feed-liked-by-popup {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 10px;
+    display: none;
+    z-index: 1000;
+    min-width: 220px;
+}
+
+.feed-liked-by-popup.active {
+    display: block;
+    animation: feedFadeIn 0.3s ease;
+}
+
+@keyframes feedFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.feed-popup-content {
+    background: rgba(15, 23, 42, 0.98);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-height: 220px;
+    overflow: hidden;
+}
+
+.feed-popup-title {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.feed-liked-by-list-container {
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+/* Scrollbar styling for liked by list */
+.feed-liked-by-list-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.feed-liked-by-list-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.feed-liked-by-list-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.feed-liked-by-list-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.feed-liked-by-list {
+    list-style: none;
+}
+
+.feed-liked-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: var(--feed-transition);
+}
+
+.feed-liked-user:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+}
+
+.feed-liked-user:last-child {
+    border-bottom: none;
+}
+
+.feed-user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.feed-liker-name {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: var(--feed-transition);
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.feed-liker-name:hover {
+    color: var(--feed-primary);
+}
+
+.feed-read-more-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--feed-primary), var(--feed-accent));
+    color: white;
+    text-decoration: none;
+    padding: 0.7rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: var(--feed-transition);
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.feed-read-more-btn:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    color: white;
+}
+
+/* Loading Spinner */
+.feed-loading-container {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    gap: 1rem;
+}
+
+.feed-loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--feed-light-gray);
+    border-left: 3px solid var(--feed-primary);
+    border-radius: 50%;
+    animation: feedSpin 1s linear infinite;
+}
+
+@keyframes feedSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.feed-loading-container p {
+    color: var(--feed-gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .feed-container {
+        padding: 0 0.75rem;
+        max-width: 95% !important;
+    }
+
+    .feed-background {
+        margin-top: 70px;
+        padding: 1rem 0 2rem;
+    }
+
+    /* FIXED: Mobile overlap with navbar - Added more spacing */
+    .feed-posts-container {
+        gap: 1.25rem;
+    }
+
+    .feed-post-card:first-child {
+        margin-top: 1.5rem !important; /* Extra space for first post */
+    }
+
+    .feed-post-preview {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+
+    .feed-post-title {
+        font-size: 1.2rem;
+    }
+
+    .feed-post-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .feed-post-excerpt {
+        font-size: 0.85rem;
+    }
+
+    #feedShuffleBtn {
+        bottom: 1rem;
+        right: 1rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+    }
+
+    .feed-post-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .feed-post-stats {
+        width: 100%;
+    }
+
+    .feed-like-section {
+        justify-content: space-between;
+    }
+
+    .feed-read-more-btn {
+        text-align: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .feed-liked-by-popup {
+        left: -50%;
+        transform: translateX(-50%);
+    }
+
+    .feed-post-meta {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .feed-delete-post-link {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .feed-background {
+        margin-top: 110px;
+        padding: 0.5rem 0 1.5rem;
+    }
+
+    /* FIXED: More spacing for very small screens */
+    .feed-post-card:first-child {
+        margin-top: 1rem !important;
+    }
+
+    .feed-posts-container {
+        gap: 1rem;
+    }
+
+    .feed-post-preview {
+        padding: 1.25rem;
+        border-radius: 14px;
+    }
+
+    .feed-post-title {
+        font-size: 1.1rem;
+    }
+
+    .feed-post-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .feed-author-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .feed-author-name {
+        font-size: 0.85rem;
+    }
+
+    .feed-post-date {
+        font-size: 0.7rem;
+    }
+
+    .feed-like-btn, .feed-read-more-btn {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.8rem;
+    }
+
+    .feed-liked-by-toggle {
+        font-size: 0.75rem;
+    }
+
+    .feed-popup-content {
+        min-width: 200px;
+        max-height: 180px;
+    }
+}
+
+
+

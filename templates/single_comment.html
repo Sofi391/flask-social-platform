@@ -1,0 +1,38 @@
+<div class="custom-comment-card" data-comment-id="{{ comment.id }}">
+    <div class="custom-comment-header">
+        <img src="{{ comment.author.email | gravatar }}" alt="avatar" class="custom-comment-avatar">
+        <div class="custom-comment-content">
+            <strong>{{ comment.author.name }}</strong>
+            <p class="custom-comment-text">{{ comment.text | safe }}</p>
+            <small class="text-muted">{{ comment.date.strftime('%b %d, %Y %H:%M') }}</small>
+            {% if comment.edited %}<small class="text-muted"> (Edited)</small>{% endif %}
+
+            <form action="{{ url_for('like_comment', comment_id=comment.id) }}"
+                  method="POST"
+                  class="custom-like-form"
+                  data-comment-id="{{ comment.id }}">
+                <button type="submit" class="custom-like-btn {% if comment in current_user.likes|map(attribute='comment') %}liked{% endif %}"
+                        data-comment-id="{{ comment.id }}">
+                    <i class="bi bi-heart-fill"></i>
+                    <span class="custom-like-count">{{ comment.likes|length }}</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Dropdown menu -->
+        <div class="dropdown comment-dropdown">
+            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#"><i class="bi bi-reply"></i> Reply</a></li>
+                {% if current_user.id == comment.author.id %}
+                <li><a class="dropdown-item" href="{{ url_for('edit_comment', comment_id=comment.id) }}"><i class="bi bi-pencil"></i> Edit</a></li>
+                {% endif %}
+                {% if current_user.is_admin or current_user.id == comment.author.id or current_user.id == comment.post.author.id %}
+                <li><a class="dropdown-item text-danger" href="{{ url_for('delete_comment', comment_id=comment.id) }}"><i class="bi bi-trash"></i> Delete</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>

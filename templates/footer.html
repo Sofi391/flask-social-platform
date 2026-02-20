@@ -1,0 +1,80 @@
+<!-- Footer-->
+<footer class=" gradient-background mt-0">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <ul class="list-inline text-center">
+                    <li class="list-inline-item">
+                        <a href="https://www.linkedin.com/in/sofoniyas-alebachew-bb876b33b/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#!">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://github.com/sofi391">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="small text-center text-muted fst-italic">Copyright &copy; My Website 2025</div>
+            </div>
+        </div>
+    </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("button[data-action]").forEach(button => {
+    button.addEventListener("click", e => {
+      e.preventDefault();
+      const action = button.dataset.action;
+      let confirmMessage = "";
+      switch(action) {
+        case "promote":
+          confirmMessage = "✅ Do you want to promote this user?";
+          break;
+        case "demote":
+          confirmMessage = "⚠️ Are you sure you want to demote this user?";
+          break;
+        case "restrict":
+          confirmMessage = "⚠️ Are you sure you want to restrict this user?";
+          break;
+        case "unrestrict":
+          confirmMessage = "✅ Do you want to unrestrict this user?";
+          break;
+        case "delete":
+          confirmMessage = "❌ Are you sure you want to delete this user and all their posts?";
+          break;
+      }
+      if (confirm(confirmMessage)) {
+        window.location.href = button.dataset.url;
+      }
+    });
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Delete post confirmation
+  document.querySelectorAll(".delete-post-link").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      if (confirm("❌ Are you sure you want to delete this post?")) {
+        window.location.href = link.dataset.url;
+      }
+    });
+  });
+});
+</script>
+</footer>
+
