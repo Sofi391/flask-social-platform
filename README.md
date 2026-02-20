@@ -225,3 +225,7 @@ This project shows my **first hands-on experience with Flask**, demonstrating my
 ## 📄 License
 
 This project is open source and available under the MIT License.
+
+--- 
+
+**⭐ If you find this project helpful, please consider giving it a star!**
