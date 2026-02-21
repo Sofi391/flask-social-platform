@@ -5,13 +5,13 @@ Visual walkthrough of the Flask Social Platform features and user interface.
 ---
 
 ## 🏠 Home Page
-![Home Page](home-page.png)
+![Home Page](./home.png)
 *Dynamic feed with blog posts, infinite scroll, and randomized content display*
 
 ---
 
 ## 🔐 Login Page
-![Login Page](./login-page.png)
+![Login Page](./login.png)
 *Secure user authentication with email and password*
 
 ---
@@ -22,9 +22,9 @@ Visual walkthrough of the Flask Social Platform features and user interface.
 
 ---
 
-## 📝 My Posts
-![My Posts](./me.png)
-*User's personal blog posts management dashboard*
+## 👨‍💻 About Me Page
+![About Me](./me.png)
+*Developer information and background section*
 
 ---
 

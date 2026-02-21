@@ -8,7 +8,7 @@
 
 A **full-stack Flask application** designed as a social blogging platform where users can create, share, and engage with content. This project highlights foundational **backend development skills** including authentication, role-based permissions, relational database design, and notification systems.
 
-> 📸 **Screenshots**: Check out the `/screenshots` folder to see every page and feature in action.
+> 📸 **Screenshots**: Check out the [screenshots gallery](screenshots/GALLERY.md) to see every page and feature in action.
 
 ---
 
