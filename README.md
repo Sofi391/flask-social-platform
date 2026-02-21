@@ -212,13 +212,15 @@ This project shows my **first hands-on experience with Flask**, demonstrating my
 
 ### 🤝 Connect with Me
 
-[<img align="left" alt="LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]  
-[<img align="left" alt="GitHub" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/github.svg" />][github]  
-
-[linkedin]: https://linkedin.com/in/sofoniyas-alebachew-bb876b33b  
-[github]: https://github.com/Sofi391
-
-<br />
+<p align="center">
+  <a href="https://linkedin.com/in/sofoniyas-alebachew-bb876b33b">
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/Sofi391">
+    <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+  </a>
+</p>
 
 ---
 
